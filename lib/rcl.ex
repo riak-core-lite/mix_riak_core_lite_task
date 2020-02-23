@@ -3,6 +3,7 @@ defmodule Rcl do
 
   @vnode_tpl_str File.read!("templates/basic/vnode.ex.eex")
   @api_tpl_str File.read!("templates/basic/api.ex.eex")
+  @app_tpl_str File.read!("templates/basic/app.ex.eex")
   @service_tpl_str File.read!("templates/basic/service.ex.eex")
   @supervisor_tpl_str File.read!("templates/basic/supervisor.ex.eex")
 
@@ -12,22 +13,32 @@ defmodule Rcl do
   @node2_config_str File.read!("templates/basic/config/node2.ex")
   @node3_config_str File.read!("templates/basic/config/node3.ex")
 
+  @rel_env_bat_str File.read!("templates/basic/rel/env.bat.eex")
+  @rel_env_sh_str File.read!("templates/basic/rel/env.sh.eex")
+  @rel_vm_args_str File.read!("templates/basic/rel/vm.args.eex")
+
   def run(["new", name]) do
     # Macro.underscore("HoneyBear")
     module_name = Macro.camelize(name)
     tpl_opts = [name: name, module_name: module_name]
+
     IO.puts("Creating project #{name}, module #{module_name}")
     Mix.Tasks.New.run([name])
+
     lib_base_path = Path.join([name, "lib"])
     lib_path = Path.join([name, "lib", name])
     config_path = Path.join([name, "config"])
+    rel_path = Path.join([name, "rel"])
+
     File.mkdir_p!(lib_path)
     File.mkdir_p!(config_path)
+    File.mkdir_p!(rel_path)
 
     write_template(name, "mix.exs", @mix_tpl_str, tpl_opts)
 
     write_template(lib_base_path, "#{name}.ex", @api_tpl_str, tpl_opts)
 
+    write_template(lib_path, "application.ex", @app_tpl_str, tpl_opts)
     write_template(lib_path, "vnode.ex", @vnode_tpl_str, tpl_opts)
     write_template(lib_path, "service.ex", @service_tpl_str, tpl_opts)
     write_template(lib_path, "supervisor.ex", @supervisor_tpl_str, tpl_opts)
@@ -37,6 +48,10 @@ defmodule Rcl do
     write_file(config_path, "node1.ex", @node1_config_str)
     write_file(config_path, "node2.ex", @node2_config_str)
     write_file(config_path, "node3.ex", @node3_config_str)
+
+    write_file(rel_path, "env.bat.eex", @rel_env_bat_str)
+    write_file(rel_path, "env.sh.eex", @rel_env_sh_str)
+    write_file(rel_path, "vm.args.eex", @rel_vm_args_str)
   end
 
   def run(_other) do
