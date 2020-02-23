@@ -24,29 +24,35 @@ defmodule Rcl do
     File.mkdir_p!(lib_path)
     File.mkdir_p!(config_path)
 
-    mix_code_str = EEx.eval_string(@mix_tpl_str, tpl_opts)
+    write_template(name, "mix.exs", @mix_tpl_str, tpl_opts)
 
-    vnode_code_str = EEx.eval_string(@vnode_tpl_str, tpl_opts)
-    api_code_str = EEx.eval_string(@api_tpl_str, tpl_opts)
-    service_code_str = EEx.eval_string(@service_tpl_str, tpl_opts)
-    supervisor_code_str = EEx.eval_string(@supervisor_tpl_str, tpl_opts)
+    write_template(lib_base_path, "#{name}.ex", @api_tpl_str, tpl_opts)
 
-    File.write!(Path.join(name, "mix.exs"), mix_code_str)
+    write_template(lib_path, "vnode.ex", @vnode_tpl_str, tpl_opts)
+    write_template(lib_path, "service.ex", @service_tpl_str, tpl_opts)
+    write_template(lib_path, "supervisor.ex", @supervisor_tpl_str, tpl_opts)
 
-    File.write!(Path.join(lib_path, "vnode.ex"), vnode_code_str)
-    File.write!(Path.join(lib_path, "service.ex"), service_code_str)
-    File.write!(Path.join(lib_path, "supervisor.ex"), supervisor_code_str)
-
-    File.write!(Path.join(lib_base_path, "#{name}.ex"), api_code_str)
-
-    File.write!(Path.join(config_path, "config.ex"), @config_config_str)
-    File.write!(Path.join(config_path, "dev.ex"), @dev_config_str)
-    File.write!(Path.join(config_path, "node1.ex"), @node1_config_str)
-    File.write!(Path.join(config_path, "node2.ex"), @node2_config_str)
-    File.write!(Path.join(config_path, "node3.ex"), @node3_config_str)
+    write_file(config_path, "config.ex", @config_config_str)
+    write_file(config_path, "dev.ex", @dev_config_str)
+    write_file(config_path, "node1.ex", @node1_config_str)
+    write_file(config_path, "node2.ex", @node2_config_str)
+    write_file(config_path, "node3.ex", @node3_config_str)
   end
 
   def run(_other) do
     IO.puts("usage: mix rcl new <project-name>")
+  end
+
+  def write_file(base_dir, file_name, content) do
+    file_path = Path.join(base_dir, file_name)
+
+    Mix.Shell.IO.info([IO.ANSI.green(), "rcl: creating", IO.ANSI.default_color(), " #{file_path}"])
+
+    File.write!(file_path, content)
+  end
+
+  def write_template(base_dir, file_name, tpl, tpl_opts) do
+    content = EEx.eval_string(tpl, tpl_opts)
+    write_file(base_dir, file_name, content)
   end
 end
