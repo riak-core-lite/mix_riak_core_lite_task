@@ -7,11 +7,11 @@ defmodule Rcl do
   @service_tpl_str File.read!("templates/basic/service.ex.eex")
   @supervisor_tpl_str File.read!("templates/basic/supervisor.ex.eex")
 
-  @config_config_str File.read!("templates/basic/config/config.ex")
-  @dev_config_str File.read!("templates/basic/config/dev.ex")
-  @node1_config_str File.read!("templates/basic/config/node1.ex")
-  @node2_config_str File.read!("templates/basic/config/node2.ex")
-  @node3_config_str File.read!("templates/basic/config/node3.ex")
+  @config_config_str File.read!("templates/basic/config/config.exs")
+  @dev_config_str File.read!("templates/basic/config/dev.exs")
+  @node1_config_str File.read!("templates/basic/config/node1.exs")
+  @node2_config_str File.read!("templates/basic/config/node2.exs")
+  @node3_config_str File.read!("templates/basic/config/node3.exs")
 
   @rel_env_bat_str File.read!("templates/basic/rel/env.bat.eex")
   @rel_env_sh_str File.read!("templates/basic/rel/env.sh.eex")
@@ -43,11 +43,11 @@ defmodule Rcl do
     write_template(lib_path, "service.ex", @service_tpl_str, tpl_opts)
     write_template(lib_path, "supervisor.ex", @supervisor_tpl_str, tpl_opts)
 
-    write_file(config_path, "config.ex", @config_config_str)
-    write_file(config_path, "dev.ex", @dev_config_str)
-    write_file(config_path, "node1.ex", @node1_config_str)
-    write_file(config_path, "node2.ex", @node2_config_str)
-    write_file(config_path, "node3.ex", @node3_config_str)
+    write_file(config_path, "config.exs", @config_config_str)
+    write_file(config_path, "dev.exs", @dev_config_str)
+    write_file(config_path, "node1.exs", @node1_config_str)
+    write_file(config_path, "node2.exs", @node2_config_str)
+    write_file(config_path, "node3.exs", @node3_config_str)
 
     write_file(rel_path, "env.bat.eex", @rel_env_bat_str)
     write_file(rel_path, "env.sh.eex", @rel_env_sh_str)
