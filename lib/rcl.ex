@@ -9,6 +9,7 @@ defmodule Rcl do
 
   @config_config_str File.read!("templates/basic/config/config.exs")
   @dev_config_str File.read!("templates/basic/config/dev.exs")
+  @test_config_str File.read!("templates/basic/config/test.exs")
   @node1_config_str File.read!("templates/basic/config/node1.exs")
   @node2_config_str File.read!("templates/basic/config/node2.exs")
   @node3_config_str File.read!("templates/basic/config/node3.exs")
@@ -45,6 +46,7 @@ defmodule Rcl do
 
     write_file(config_path, "config.exs", @config_config_str)
     write_file(config_path, "dev.exs", @dev_config_str)
+    write_file(config_path, "test.exs", @test_config_str)
     write_file(config_path, "node1.exs", @node1_config_str)
     write_file(config_path, "node2.exs", @node2_config_str)
     write_file(config_path, "node3.exs", @node3_config_str)
